@@ -13,38 +13,51 @@ const AuthForm = () => {
 
   const submitHandler=(event)=>{
       event.preventDefault();
-
+    console.log('submit');
     const enteredEmail=emailInputRef.current.value;
-    const enterPassword=passwordInputRef.current.value;
+    console.log(enteredEmail);
+    const enteredPassword=passwordInputRef.current.value;
     //optional: Add validation
+    console.log(enteredPassword);
+    setIsLogin(true);
+    let url;
     if(isLogin){
-
+      url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBAwK4k_DJN45d8bjQFpZk-MsnTCfd2lUE'
     }else{
-      fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyBAwK4k_DJN45d8bjQFpZk-MsnTCfd2lUE',
-      {
+      url='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBAwK4k_DJN45d8bjQFpZk-MsnTCfd2lUE'
+    }
+
+    fetch(url,{
         method: 'POST',
         body: JSON.stringify({
           email: enteredEmail,
-          password: enterPassword,
+          password: enteredPassword,
           returnSecureToken: true
+         
         }),
         headers: {
           'Content-Type': 'application/json'
         }
       }
-      ).then(res=>{
+      ).then((res)=>{
         if(res.ok){
-          //...
+          return res.json();
         }else{
-          return res.json().then(data =>{
+          return res.json().then((data) =>{
+            let errorMessage='Authentication failed';
             //show an error modal
             console.log(data);
+            throw new Error(errorMessage);
           })
         }
       })
-       
-    }
-  }
+      .then((data) => {
+        console.log(data);
+      })
+      .catch(err =>{
+        alert(err.message);
+      });
+  };
 
   return (
     <section className={classes.auth}>
@@ -63,13 +76,17 @@ const AuthForm = () => {
           />
         </div>
         <div className={classes.actions}>
+        <button>{isLogin ?'Login' :'Create new Login'}</button>
+          {/* {!isLogin && <button>{isLogin ? 'Login' : 'Create Account'}</button>}
+          {isLogin && <p>Sending request...</p>} */}
           <button
             type='button'
             className={classes.toggle}
             onClick={switchAuthModeHandler}
-          ><hr/>{isLogin ? 'Login': 'create Account'}<hr/>
+          >
             {isLogin ? 'Create new account' : 'Login with existing account'}
           </button>
+           
         </div>
       </form>
     </section>
