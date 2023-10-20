@@ -1,11 +1,17 @@
-import { useState, useRef } from 'react';
+import { useState, useRef,useContext } from 'react';
 
 import classes from './AuthForm.module.css';
+import AuthContext from '../../store/auth-context';
+import UserProfile from '../Profile/UserProfile';
+import HomePage from '../../pages/HomePage';
 
 const AuthForm = () => {
   const emailInputRef=useRef();
   const passwordInputRef=useRef();
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading,setIsLoading]=useState(false);
+
+  const authCtx=useContext(AuthContext);
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -19,7 +25,7 @@ const AuthForm = () => {
     const enteredPassword=passwordInputRef.current.value;
     //optional: Add validation
     console.log(enteredPassword);
-    setIsLogin(true);
+    setIsLoading(true);
     let url;
     if(isLogin){
       url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBAwK4k_DJN45d8bjQFpZk-MsnTCfd2lUE'
@@ -32,15 +38,17 @@ const AuthForm = () => {
         body: JSON.stringify({
           email: enteredEmail,
           password: enteredPassword,
-          returnSecureToken: true
+          returnSecureToken: true,
          
         }),
         headers: {
           'Content-Type': 'application/json'
-        }
-      }
-      ).then((res)=>{
+        },
+      })
+      .then((res)=>{
+        setIsLoading(false);
         if(res.ok){
+          alert('sucessful');
           return res.json();
         }else{
           return res.json().then((data) =>{
@@ -52,7 +60,7 @@ const AuthForm = () => {
         }
       })
       .then((data) => {
-        console.log(data);
+        authCtx.login(data.idTokan);
       })
       .catch(err =>{
         alert(err.message);
@@ -77,8 +85,6 @@ const AuthForm = () => {
         </div>
         <div className={classes.actions}>
         <button>{isLogin ?'Login' :'Create new Login'}</button>
-          {/* {!isLogin && <button>{isLogin ? 'Login' : 'Create Account'}</button>}
-          {isLogin && <p>Sending request...</p>} */}
           <button
             type='button'
             className={classes.toggle}
