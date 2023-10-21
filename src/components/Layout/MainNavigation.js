@@ -13,9 +13,9 @@ const MainNavigation = () => {
     authCtx.logout();
   }
 
-  setTimeout(() => {
-        logoutHandler();
-  }, 50000);
+  // setTimeout(() => {
+  //       logoutHandler();
+  // }, 50000);
    
 
    //console.log(authCtx.isLoggedIn);
