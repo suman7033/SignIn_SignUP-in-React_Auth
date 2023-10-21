@@ -10,8 +10,9 @@ const AuthForm = () => {
   const passwordInputRef=useRef();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading,setIsLoading]=useState(false);
-
+  
   const authCtx=useContext(AuthContext);
+  //console.log('isLoggedIn(AuthForm)',authCtx.isLoggedIn);
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -48,7 +49,7 @@ const AuthForm = () => {
       .then((res)=>{
         setIsLoading(false);
         if(res.ok){
-          alert('sucessful');
+          //alert('sucessful');
           return res.json();
         }else{
           return res.json().then((data) =>{
@@ -61,6 +62,8 @@ const AuthForm = () => {
       })
       .then((data) => {
         authCtx.login(data.idTokan);
+        authCtx.login(true);
+        
       })
       .catch(err =>{
         alert(err.message);

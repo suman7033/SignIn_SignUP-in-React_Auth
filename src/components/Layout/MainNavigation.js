@@ -9,7 +9,7 @@ const MainNavigation = () => {
 
   const isLoggedIn=authCtx.isLoggedIn;
 
-   
+   //console.log(authCtx.isLoggedIn);
 
   return (
     <header className={classes.header}>

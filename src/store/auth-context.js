@@ -10,18 +10,19 @@ const AuthContext=React.createContext({
 
  export const AuthContextProvider=(props)=>{
   const [tokan,setTokan]=useState(null);
-  const userIsLoggedIn=!!tokan;
+  //const userIsLoggedIn=!!tokan;
 
   const loginHandler=(tokan)=>{
-    
-       setTokan(tokan); //set the tokan recived as an argument
+       
+       setTokan(tokan);
+       
   }
   const logoutHandler=()=>{
         setTokan(null);
   }
   const contextValue={
     tokan :tokan,
-    isLoggedIn: userIsLoggedIn,
+    isLoggedIn: !!tokan,
     login: loginHandler,
     logout: logoutHandler,
   };
