@@ -60,7 +60,7 @@ const AuthForm = () => {
         }
       })
       .then((data) => {
-        authCtx.login(data.idTokan);
+        authCtx.login(data.idToken);
         authCtx.login(true);
         history.replace('/');
       })
